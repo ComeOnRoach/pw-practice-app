@@ -4,7 +4,7 @@ import {Datepicker} from "../page-objects/datePikerObject"
 test.describe('Datepickers', () => {
 
     test('Common Datepicker', async ({page}) => {
-        const numberOfDaysSelectedFromToday = -220;
+        const numberOfDaysSelectedFromToday = -4;
 
         const commonDatepicers = new Datepicker(page);
         await commonDatepicers.commonDatepicer(numberOfDaysSelectedFromToday);
@@ -16,6 +16,7 @@ test.describe('Datepickers', () => {
         
         const datepickerWithRange = new Datepicker(page);
         await datepickerWithRange.datepickerWithRange(startDayFromToday, endDayFromToday);
+
 
     })
 })

@@ -10,26 +10,29 @@ class Datepicker {
     }
 
     async commonDatepicer(numberOfDaysSelectedFromToday: number){
+        const datepickerCardName = "Common Datepicker"
         const menuSelector = new FeaturesSelector(this.page);
         await menuSelector.formsDatepicker();
         const commonDatepicer = this.page.locator('nb-card', {hasText: 'Common Datepicker'});
         await commonDatepicer.getByRole('textbox', {name: 'Form Picker'}).click();
 
-        const selectedDay = await this.daySelector(numberOfDaysSelectedFromToday);
+        const selectedDay = await this.daySelector(numberOfDaysSelectedFromToday, datepickerCardName);
         const dayFromInputField = await commonDatepicer.getByRole('textbox', {name: 'Form Picker'}).inputValue(); 
 
         expect(selectedDay).toContain(dayFromInputField);
     }
 
     async datepickerWithRange(startDay: number, endDay: number){
+        const datepickerCardName = "Datepicker With Range"
         const menuSelector = new FeaturesSelector(this.page);
         await menuSelector.formsDatepicker();
 
         const datepickerWithRange = this.page.locator('nb-card').getByPlaceholder('Range Picker');
         await datepickerWithRange.click();
 
-        const startDayValueInputField = await this.daySelector(startDay);
-        const endDayValueInputField = await this.daySelector(endDay);
+        const startDayValueInputField = await this.daySelector(startDay, datepickerCardName);
+        
+        const endDayValueInputField = await this.daySelector(endDay, datepickerCardName);
 
         const rangeValue = `${startDayValueInputField} - ${endDayValueInputField}`;
         const rangeFromInputField = await datepickerWithRange.inputValue();
@@ -38,7 +41,10 @@ class Datepicker {
 
     }
 
-    private async daySelector(numberOfDaysSelectedFromToday: number){
+    private async daySelector(numberOfDaysSelectedFromToday: number, datepickerCardName: string){
+        let calendargetCalendarFullClass: string;
+        datepickerCardName === "Common Datepicker" && (calendargetCalendarFullClass = '[class="day-cell ng-star-inserted"]');
+        datepickerCardName === "Datepicker With Range" && (calendargetCalendarFullClass = '[class="range-cell day-cell ng-star-inserted"]');
         const currentDay = new Date();
         const selectedDayCalendar = new Date();
         selectedDayCalendar.setDate(currentDay.getDate() + numberOfDaysSelectedFromToday);
@@ -65,10 +71,13 @@ class Datepicker {
                 sliderMonthAndYear = await calendar.locator('nb-calendar-view-mode button').textContent();
             } 
         }
-        await calendar.locator('.day-cell.ng-star-inserted').getByText(day.toString(), {exact: true}).click(); 
+        
+        // await calendar.locator('[class="range-cell day-cell ng-star-inserted"]').getByText(day.toString(), {exact: true}).click(); 
+         await calendar.locator(calendargetCalendarFullClass).getByText(day.toString(), {exact: true}).click(); 
 
         return `${monthShort} ${day}, ${year}`;
     }
+
 }
 
 export {Datepicker};
