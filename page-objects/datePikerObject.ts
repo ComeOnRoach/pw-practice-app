@@ -16,7 +16,7 @@ class Datepicker {
         const commonDatepicer = this.page.locator('nb-card', {hasText: 'Common Datepicker'});
         await commonDatepicer.getByRole('textbox', {name: 'Form Picker'}).click();
 
-        const selectedDay = await this.daySelector(numberOfDaysSelectedFromToday, datepickerCardName);
+        const selectedDay = await this.daySelector(numberOfDaysSelectedFromToday);
         const dayFromInputField = await commonDatepicer.getByRole('textbox', {name: 'Form Picker'}).inputValue(); 
 
         expect(selectedDay).toContain(dayFromInputField);
@@ -30,9 +30,9 @@ class Datepicker {
         const datepickerWithRange = this.page.locator('nb-card').getByPlaceholder('Range Picker');
         await datepickerWithRange.click();
 
-        const startDayValueInputField = await this.daySelector(startDay, datepickerCardName);
+        const startDayValueInputField = await this.daySelector(startDay);
         
-        const endDayValueInputField = await this.daySelector(endDay, datepickerCardName);
+        const endDayValueInputField = await this.daySelector(endDay);
 
         const rangeValue = `${startDayValueInputField} - ${endDayValueInputField}`;
         const rangeFromInputField = await datepickerWithRange.inputValue();
@@ -41,10 +41,7 @@ class Datepicker {
 
     }
 
-    private async daySelector(numberOfDaysSelectedFromToday: number, datepickerCardName: string){
-        let calendargetCalendarFullClass: string;
-        datepickerCardName === "Common Datepicker" && (calendargetCalendarFullClass = '[class="day-cell ng-star-inserted"]');
-        datepickerCardName === "Datepicker With Range" && (calendargetCalendarFullClass = '[class="range-cell day-cell ng-star-inserted"]');
+    private async daySelector(numberOfDaysSelectedFromToday: number){
         const currentDay = new Date();
         const selectedDayCalendar = new Date();
         selectedDayCalendar.setDate(currentDay.getDate() + numberOfDaysSelectedFromToday);
@@ -72,8 +69,7 @@ class Datepicker {
             } 
         }
         
-        // await calendar.locator('[class="range-cell day-cell ng-star-inserted"]').getByText(day.toString(), {exact: true}).click(); 
-         await calendar.locator(calendargetCalendarFullClass).getByText(day.toString(), {exact: true}).click(); 
+        await calendar.locator('.day-cell.ng-star-inserted').getByText(day.toString(), {exact: true}).click(); 
 
         return `${monthShort} ${day}, ${year}`;
     }
